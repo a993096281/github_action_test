@@ -15,7 +15,7 @@ env:
   HELLO_STRING: ${{ 'Hi, this is lijiu!' }}
 
 jobs:
-  Build:
+  Build_And_Test:
     runs-on: ubuntu-latest
     timeout-minutes: 200
     steps:
@@ -38,21 +38,13 @@ jobs:
       - name: Maven Build
         run: |
           mvn clean package install -DskipTests
-
-  Test:
-    needs: Build
-    runs-on: ubuntu-latest
-    steps:
+      - name: Maven Build
+        run: |
+          mvn clean package install -DskipTests
       - name: Maven Test
         run: |
           mvn test
-  
-  Test_Report:
-    if: ${{ always() }}
-    needs: Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Test Report
+      - name: All Test Result
         uses: dorny/test-reporter@v1
         if: ${{ always() }}
         with:
@@ -60,7 +52,7 @@ jobs:
           path: target/surefire-reports/TEST-*.xml
           reporter: java-junit
           max-annotations: '50'
-      - name: Surefire Test Report
+      - name: Error Test Report
         if: ${{ always() }}
         uses: scacap/action-surefire-report@v1
         with:
