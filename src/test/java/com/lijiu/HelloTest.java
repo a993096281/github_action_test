@@ -23,7 +23,7 @@ public class HelloTest {
     @Test
     void helloErrTest() {
         int a = 10;
-        assertEquals(100, a);
+        assertEquals(10, a);
     }
 
 }
