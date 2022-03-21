@@ -2,6 +2,7 @@ package com.lijiu;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class HelloTest {
@@ -22,6 +23,19 @@ public class HelloTest {
 
     @Test
     void helloErrTest() {
+        int a = 10;
+        assertEquals(10, a);
+    }
+
+    @Test
+    void hello3Test() {
+        int a = 10;
+        assertEquals(10, a);
+    }
+
+    @Disabled
+    @Test
+    void hello4Test() {
         int a = 10;
         assertEquals(10, a);
     }
