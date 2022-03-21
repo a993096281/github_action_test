@@ -19,10 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 200
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
           submodules: 'true'
-      - uses: actions/setup-java@v1
+      - name: Setup
+        uses: actions/setup-java@v1
         with:
           java-version: 8
       - name: Cache local Maven repository
@@ -35,10 +37,10 @@ jobs:
             ${{ runner.os }}-maven-2-
       - name: Maven Build
         run: |
-          ./mvnw clean package install -DskipTests
+          mvn clean package install -DskipTests
       - name: Maven Test
         run: |
-          ./mvnw test
+          mvn test
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure()
