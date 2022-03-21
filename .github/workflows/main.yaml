@@ -43,14 +43,14 @@ jobs:
           mvn test
       - name: Test Report
         uses: dorny/test-reporter@v1
-        continue-on-error: true
+        if: ${{ always() }}
         with:
           name: Test Result
           path: target/surefire-reports/TEST-*.xml
           reporter: java-junit
           max-annotations: '50'
       - name: Surefire Test Report
-        continue-on-error: true
+        if: ${{ always() }}
         uses: scacap/action-surefire-report@v1
         with:
           report_paths: target/surefire-reports/TEST-*.xml
