@@ -1,0 +1,57 @@
+name: Build and Test
+on:
+  push:
+    branches:
+      - "main"
+    paths-ignore:
+      - "README.md"
+  pull_request:
+    branches:
+      - "main"
+    paths-ignore:
+      - "README.md"
+
+env:
+  HELLO_STRING: ${{ 'Hi, this is lijiu!' }}
+
+jobs:
+  Build_And_Test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 200
+    steps:
+      - name: Prepare env
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Cache local Maven repository
+        id: cache-maven
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-2-
+      - name: Populate maven cache
+        if: steps.cache-maven.outputs.cache-hit != 'true'
+        run: ./mvnw de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
+      - name: Maven Build
+        run: |
+          ./mvnw clean package install -DskipTests
+      - name: Maven Test
+        run: |
+          ./mvnw test
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Test Result
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
+
+
+
+  
+    
