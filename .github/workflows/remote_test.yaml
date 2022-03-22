@@ -22,4 +22,5 @@ jobs:
           P_GITHUB_SHA: ${{ github.sha }}
         run: |
           echo "repository:$P_GITHUB_REPOSITORY ref:$P_GITHUB_REF sha:$P_GITHUB_SHA"
-      - uses: lhotari/action-upterm@v1
+      #- uses: lhotari/action-upterm@v1
+      - uses: hmarr/debug-action@v2
