@@ -1,0 +1,24 @@
+name: Remote Test
+on:
+  push:
+    branches:
+      - "main"
+    paths-ignore:
+      - "README.md"
+  pull_request:
+    branches:
+      - "main"
+    paths-ignore:
+      - "README.md"
+
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        env:
+          P_GITHUB_REPOSITORY: ${{ github.repository }}
+          P_GITHUB_REF: ${{ github.ref }}
+          P_GITHUB_SHA: ${{ github.sha }}
+        run: |
+          echo "repository:$P_GITHUB_REPOSITORY ref:$P_GITHUB_REF sha:$P_GITHUB_SHA"
