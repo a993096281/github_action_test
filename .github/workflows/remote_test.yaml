@@ -23,6 +23,11 @@ jobs:
         run: |
           echo "id:${{ github.run_id }} ${{ github.run_attempt }} repository:$P_GITHUB_REPOSITORY ref:$P_GITHUB_REF sha:$P_GITHUB_SHA"
       - uses: actions/checkout@v2
+      - name: host
+        env:
+          thost: ${{ secrets.ECS_HOST }}
+        run: |
+          echo "host: $thost"
       - uses: appleboy/ssh-action@v0.1.4
         with:
           host: ${{ secrets.ECS_HOST }}
@@ -32,5 +37,5 @@ jobs:
           script: |
             ls /home/lzw
             ll /home/lzw
-      - run: ll
+    
 
