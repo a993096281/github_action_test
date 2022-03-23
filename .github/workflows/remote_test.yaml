@@ -31,3 +31,4 @@ jobs:
           key: ${{ secrets.ECS_KEY }}
           source: "pom.xml"
           target: "/home/lzw"
+          
