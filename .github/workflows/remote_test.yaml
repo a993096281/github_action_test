@@ -21,7 +21,7 @@ jobs:
           P_GITHUB_REF: ${{ github.ref }}
           P_GITHUB_SHA: ${{ github.sha }}
         run: |
-          echo "id:${{ github.run_id }} repository:$P_GITHUB_REPOSITORY ref:$P_GITHUB_REF sha:$P_GITHUB_SHA"
+          echo "id:${{ github.run_id }} ${{ github.run_attempt }} repository:$P_GITHUB_REPOSITORY ref:$P_GITHUB_REF sha:$P_GITHUB_SHA"
       - uses: actions/checkout@v2
       - uses: appleboy/ssh-action@master
         with:
