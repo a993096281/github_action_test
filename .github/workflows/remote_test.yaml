@@ -37,5 +37,6 @@ jobs:
           script: |
             ls /home/lzw
             ll /home/lzw
+          debug: true
     
 
