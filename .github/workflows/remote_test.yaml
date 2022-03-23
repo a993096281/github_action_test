@@ -21,6 +21,13 @@ jobs:
           P_GITHUB_REF: ${{ github.ref }}
           P_GITHUB_SHA: ${{ github.sha }}
         run: |
-          echo "repository:$P_GITHUB_REPOSITORY ref:$P_GITHUB_REF sha:$P_GITHUB_SHA"
-      - uses: mxschmitt/action-tmate@v3
-      - uses: hmarr/debug-action@v2
+          echo "id:${{ github.run_id }} repository:$P_GITHUB_REPOSITORY ref:$P_GITHUB_REF sha:$P_GITHUB_SHA"
+      - uses: actions/checkout@v2
+      - uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: ${{ secrets.ECS_USERNAME }}
+          port: ${{ secrets.ECS_PORT }}
+          key: ${{ secrets.ECS_KEY }}
+          source: "pom.xml"
+          target: "/home/lzw"
