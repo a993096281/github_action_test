@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.ECS_PASSWORD }}
           port: ${{ secrets.ECS_PORT }}
           script: |
-            ll /home/lzw
+            ls -l /home/lzw
       
       - name: Get Test Report Files
         run: |
