@@ -23,6 +23,7 @@ jobs:
         run: |
           echo "id:${{ github.run_id }} ${{ github.run_attempt }} repository:$P_GITHUB_REPOSITORY ref:$P_GITHUB_REF sha:$P_GITHUB_SHA"
           pwd
+      - uses: actions/checkout@v2
       - name: Remote Run Test
         uses: appleboy/ssh-action@master
         with:
@@ -32,7 +33,6 @@ jobs:
           port: ${{ secrets.ECS_PORT }}
           script: |
             ls -l /home/lzw
-      
       - name: Get Test Report Files
         run: |
           pwd
