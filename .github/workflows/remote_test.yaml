@@ -36,7 +36,7 @@ jobs:
       - name: Get Test Report Files
         run: |
           pwd
-          sshpass -p ${{ secrets.ECS_PASSWORD }} scp -r -P ${{ secrets.ECS_PORT }} root@${{ env.ECS_HOST }}:/home/lzw/surefire-reports .
+          sshpass -p ${{ secrets.ECS_PASSWORD }} scp -r -P ${{ secrets.ECS_PORT }} root@${{ secrets.ECS_HOST }}:/home/lzw/surefire-reports .
       - name: All Test Result
         uses: dorny/test-reporter@v1
         with:
