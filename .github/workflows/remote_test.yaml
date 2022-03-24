@@ -12,7 +12,7 @@ on:
       - "README.md"
 
 jobs:
-  Test:
+  Remote_Test:
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
@@ -22,21 +22,31 @@ jobs:
           P_GITHUB_SHA: ${{ github.sha }}
         run: |
           echo "id:${{ github.run_id }} ${{ github.run_attempt }} repository:$P_GITHUB_REPOSITORY ref:$P_GITHUB_REF sha:$P_GITHUB_SHA"
-      - uses: actions/checkout@v2
-      - name: host
-        env:
-          thost: ${{ secrets.ECS_HOST_ERR }}
-        run: |
-          echo "host: $thost"
-      - uses: appleboy/ssh-action@v0.1.4
+      - name: Remote Run Test
+      - uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.ECS_HOST }}
           username: ${{ secrets.ECS_USERNAME }}
-          password: ${{ secrets.ECS_PASSWORD }}
+          key: ${{ secrets.ECS_KEY }}
           port: ${{ secrets.ECS_PORT }}
           script: |
-            ls /home/lzw
             ll /home/lzw
-          debug: true
+      
+      - name: Get Test Report Files
+        run: |
+          pwd
+          sshpass -p ${{ secrets.ECS_PASSWORD }} scp -r -P ${{ secrets.ECS_PORT }} root@${{ env.ECS_HOST }}:/home/lzw/surefire-reports .
+      - name: All Test Result
+        uses: dorny/test-reporter@v1
+        with:
+          name: All Test Result
+          path: surefire-reports/TEST-*.xml
+          reporter: java-junit
+          max-annotations: '50'
+      - name: Error Test Report
+        uses: scacap/action-surefire-report@v1
+        with:
+          check_name: Error Test Report
+          report_paths: surefire-reports/TEST-*.xml
     
 
