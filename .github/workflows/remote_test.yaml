@@ -22,12 +22,13 @@ jobs:
           P_GITHUB_SHA: ${{ github.sha }}
         run: |
           echo "id:${{ github.run_id }} ${{ github.run_attempt }} repository:$P_GITHUB_REPOSITORY ref:$P_GITHUB_REF sha:$P_GITHUB_SHA"
+          pwd
       - name: Remote Run Test
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.ECS_HOST }}
           username: ${{ secrets.ECS_USERNAME }}
-          key: ${{ secrets.ECS_KEY }}
+          password: ${{ secrets.ECS_PASSWORD }}
           port: ${{ secrets.ECS_PORT }}
           script: |
             ll /home/lzw
