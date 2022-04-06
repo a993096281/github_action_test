@@ -37,8 +37,14 @@ jobs:
         id: GetFiles
         run: |
           pwd
-          sshpass -p ${{ secrets.ECS_PASSWORD }} scp -r -o StrictHostKeyChecking=no -P ${{ secrets.ECS_PORT }} root@${{ secrets.ECS_HOST }}:/home/lzw/surefire-reports .
+          sshpass -p ${{ secrets.ECS_PASSWORD }} scp -r -o StrictHostKeyChecking=no -P ${{ secrets.ECS_PORT }} ${{ secrets.ECS_USERNAME }}@${{ secrets.ECS_HOST }}:/home/lzw/surefire-reports .
           ls -l surefire-reports
+      - uses: actions/upload-artifact@v3
+        if: ${{ steps.GetFiles.outcome == 'success' }} 
+        with:
+          name: Test_Result
+          path: surefire-reports/TEST-*.xml
+          if-no-files-found: error
       - name: All Test Result
         if: ${{ steps.GetFiles.outcome == 'success' }}
         uses: dorny/test-reporter@v1
@@ -48,7 +54,7 @@ jobs:
           reporter: java-junit
           max-annotations: '50'
       - name: Error Test Report
-        if: ${{ steps.GetFiles.outcome == 'success' }}
+        if: ${{ always() && steps.GetFiles.outcome == 'success' }}
         uses: scacap/action-surefire-report@v1
         with:
           check_name: Error Test Report
