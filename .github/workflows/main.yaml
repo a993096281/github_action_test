@@ -41,6 +41,10 @@ jobs:
       - name: Maven Test
         run: |
           mvn test
+      - uses: actions/upload-artifact@v3
+        with:
+          name: test Result
+          path: target/surefire-reports/TEST-*.xml
       - name: All Test Result
         uses: dorny/test-reporter@v1
         if: ${{ always() }}
