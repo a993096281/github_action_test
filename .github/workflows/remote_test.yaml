@@ -34,10 +34,13 @@ jobs:
           script: |
             ls -l /home/lzw
       - name: Get Test Report Files
+        id: GetFiles
         run: |
           pwd
           sshpass -p ${{ secrets.ECS_PASSWORD }} scp -r -o StrictHostKeyChecking=no -P ${{ secrets.ECS_PORT }} root@${{ secrets.ECS_HOST }}:/home/lzw/surefire-reports .
+          ls -l surefire-reports
       - name: All Test Result
+        if: ${{ steps.GetFiles.outcome == 'success' }}
         uses: dorny/test-reporter@v1
         with:
           name: All Test Result
@@ -45,6 +48,7 @@ jobs:
           reporter: java-junit
           max-annotations: '50'
       - name: Error Test Report
+        if: ${{ steps.GetFiles.outcome == 'success' }}
         uses: scacap/action-surefire-report@v1
         with:
           check_name: Error Test Report
