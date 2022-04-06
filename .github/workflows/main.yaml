@@ -44,7 +44,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: ${{ always() }} 
         with:
-          name: test Result
+          name: Test_Result
           path: target/surefire-reports/TEST-*.xml
       - name: All Test Result
         uses: dorny/test-reporter@v1
