@@ -5,7 +5,7 @@ on:
       - "main"
     #paths-ignore:
     #  - "README.md"
-  pull_request:
+  pull_request_target:
     branches:
       - "main"
     #paths-ignore:
@@ -24,7 +24,6 @@ jobs:
           #password: ${{ secrets.ECS_PASSWORD }}
           key: ${{ secrets.ECS_KEY }}
           port: ${{ secrets.ECS_PORT }}
-          envs: TEST_UID,GIT_URL,COMMIT_ID,CODE_REF
           command_timeout: 60m
           script: |
             cd workspace
