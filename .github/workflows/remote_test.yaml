@@ -3,61 +3,31 @@ on:
   push:
     branches:
       - "main"
-    paths-ignore:
-      - "README.md"
+    #paths-ignore:
+    #  - "README.md"
   pull_request:
     branches:
       - "main"
-    paths-ignore:
-      - "README.md"
+    #paths-ignore:
+    #  - "README.md"
 
 jobs:
   Remote_Test:
     runs-on: ubuntu-latest
     steps:
-      - name: Get Code
-        env:
-          P_GITHUB_REPOSITORY: ${{ github.repository }}
-          P_GITHUB_REF: ${{ github.ref }}
-          P_GITHUB_SHA: ${{ github.sha }}
-        run: |
-          echo "id:${{ github.run_id }} ${{ github.run_attempt }} repository:$P_GITHUB_REPOSITORY ref:$P_GITHUB_REF sha:$P_GITHUB_SHA"
-          pwd
       - uses: actions/checkout@v2
-      - name: Remote Run Test
+      - name: Deploy PolarDB-X Cluster
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.ECS_HOST }}
           username: ${{ secrets.ECS_USERNAME }}
-          password: ${{ secrets.ECS_PASSWORD }}
+          #password: ${{ secrets.ECS_PASSWORD }}
+          key: ${{ secrets.ECS_KEY }}
           port: ${{ secrets.ECS_PORT }}
+          envs: TEST_UID,GIT_URL,COMMIT_ID,CODE_REF
+          command_timeout: 60m
           script: |
-            ls -l /home/lzw
-      - name: Get Test Report Files
-        id: GetFiles
-        run: |
-          pwd
-          sshpass -p ${{ secrets.ECS_PASSWORD }} scp -r -o StrictHostKeyChecking=no -P ${{ secrets.ECS_PORT }} ${{ secrets.ECS_USERNAME }}@${{ secrets.ECS_HOST }}:/home/lzw/surefire-reports .
-          ls -l surefire-reports
-      - uses: actions/upload-artifact@v3
-        if: ${{ steps.GetFiles.outcome == 'success' }} 
-        with:
-          name: Test_Result
-          path: surefire-reports/TEST-*.xml
-          if-no-files-found: error
-      - name: All Test Result
-        if: ${{ steps.GetFiles.outcome == 'success' }}
-        uses: dorny/test-reporter@v1
-        with:
-          name: All Test Result
-          path: surefire-reports/TEST-*.xml
-          reporter: java-junit
-          max-annotations: '50'
-      - name: Error Test Report
-        if: ${{ always() && steps.GetFiles.outcome == 'success' }}
-        uses: scacap/action-surefire-report@v1
-        with:
-          check_name: Error Test Report
-          report_paths: surefire-reports/TEST-*.xml
+            cd workspace
+            ls
     
 
