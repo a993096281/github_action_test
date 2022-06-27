@@ -5,7 +5,9 @@ on:
       - "main"
     #paths-ignore:
     #  - "README.md"
-  pull_request_target:
+  pull_request_review:
+    types:
+      - "submitted"
     branches:
       - "main"
     #paths-ignore:
@@ -15,6 +17,9 @@ jobs:
   Remote_Test:
     runs-on: ubuntu-latest
     steps:
+      - name: print
+        run: |
+          echo "state:${{ github.event.review.state }}"
       - uses: actions/checkout@v2
       - name: Deploy PolarDB-X Cluster
         uses: appleboy/ssh-action@master
